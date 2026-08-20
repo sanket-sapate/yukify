@@ -23,7 +23,7 @@ export default function IconSidebar({ view, setView, onCreatePlaylist }) {
         background: 'var(--sidebar)',
         borderRight: '2px solid var(--card-border)',
       }}
-      className="flex flex-col items-center shrink-0 py-4 gap-3"
+      className="hidden md:flex flex-col items-center shrink-0 py-4 gap-3"
     >
       {/* Logo */}
       <div style={{ background: 'var(--accent)' }} className="neo-btn w-10 h-10 mb-2 pointer-events-none">

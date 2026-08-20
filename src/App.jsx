@@ -11,6 +11,7 @@ import IconSidebar from './components/IconSidebar'
 import MainContent from './components/MainContent'
 import QueuePanel from './components/QueuePanel'
 import Player from './components/Player'
+import BottomNav from './components/BottomNav'
 import CreatePlaylistModal from './components/CreatePlaylistModal'
 import Toast from './components/Toast'
 
@@ -22,6 +23,7 @@ export default function App() {
   const [view, setView] = useState('library')
   const [activePlaylistId, setActivePlaylistId] = useState(null)
   const [showCreateModal, setShowCreateModal] = useState(false)
+  const [showMobileQueue, setShowMobileQueue] = useState(false)
   const [query, setQuery] = useState('')
   const [toast, setToast] = useState(null)
 
@@ -66,7 +68,7 @@ export default function App() {
       <TopBar query={query} setQuery={setQuery} />
 
       {/* Middle: sidebar | main | queue */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex flex-1 overflow-hidden pb-14 md:pb-0">
 
         <IconSidebar
           view={view}
@@ -98,8 +100,20 @@ export default function App() {
           onRemove={player.removeFromQueue}
           onMove={player.moveInQueue}
           onClear={player.clearQueue}
+          isOpen={showMobileQueue}
+          onClose={() => setShowMobileQueue(false)}
         />
       </div>
+
+      {/* Bottom nav — mobile only */}
+      <BottomNav
+        view={view}
+        setView={setView}
+        queueCount={player.queue.length}
+        showQueue={showMobileQueue}
+        onToggleQueue={() => setShowMobileQueue(q => !q)}
+        onCreatePlaylist={() => setShowCreateModal(true)}
+      />
 
       {/* Bottom player */}
       <Player

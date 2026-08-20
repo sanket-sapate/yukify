@@ -67,8 +67,91 @@ export default function Player({
         />
       </div>
 
-      {/* Controls row */}
-      <div className="grid px-6" style={{ gridTemplateColumns: '1fr auto 1fr', height: '64px' }}>
+      {/* Controls row — mobile: 2-col flex, desktop: 3-col grid */}
+      {/* Mobile layout */}
+      <div className="flex md:hidden items-center justify-between px-3" style={{ height: '64px' }}>
+        {/* Left: art + title + heart */}
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          {currentSong ? (
+            <>
+              <div
+                className="w-9 h-9 shrink-0 overflow-hidden relative"
+                style={{
+                  background: `linear-gradient(135deg, ${currentSong.gradient[0]}, ${currentSong.gradient[1]})`,
+                  border: '2px solid var(--card-border)',
+                  borderRadius: 'var(--radius)',
+                  boxShadow: 'var(--neo-shadow)',
+                }}
+              >
+                {currentSong.image && (
+                  <img src={currentSong.image} alt={currentSong.title} className="absolute inset-0 w-full h-full object-cover" draggable={false} />
+                )}
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold truncate" style={{ color: 'var(--text)' }}>{currentSong.title}</p>
+                <p className="text-[10px]" style={{ color: 'var(--muted)' }}>{currentSong.artist}</p>
+              </div>
+            </>
+          ) : (
+            <div
+              className="w-9 h-9 shrink-0"
+              style={{
+                background: '#e0e0e0',
+                border: '2px solid var(--card-border)',
+                borderRadius: 'var(--radius)',
+                boxShadow: 'var(--neo-shadow)',
+              }}
+            />
+          )}
+          <button
+            onClick={onToggleLike}
+            style={{
+              color: isLiked ? 'var(--accent)' : 'var(--muted)',
+              opacity: currentSong ? 1 : 0.3,
+            }}
+            className="ml-1 shrink-0 transition-colors hover:opacity-80"
+            title={isLiked ? 'Unlike' : 'Like'}
+            disabled={!currentSong}
+          >
+            <Heart size={14} fill={isLiked ? 'var(--accent)' : 'none'} />
+          </button>
+        </div>
+
+        {/* Right: prev + play + next */}
+        <div className="flex items-center gap-3 shrink-0">
+          <button
+            onClick={onPrev}
+            style={{ color: 'var(--muted)', opacity: currentSong ? 1 : 0.4 }}
+            className="hover:text-[var(--text)] transition-colors"
+          >
+            <SkipBack size={18} />
+          </button>
+
+          <button
+            onClick={onTogglePlay}
+            style={{ background: 'var(--accent)', color: 'white', opacity: currentSong ? 1 : 0.5 }}
+            className="neo-btn w-9 h-9"
+            disabled={!currentSong || isBuffering}
+          >
+            {isBuffering
+              ? <Loader2 size={16} className="animate-spin" />
+              : isPlaying
+                ? <Pause size={16} />
+                : <Play size={16} className="ml-0.5" />}
+          </button>
+
+          <button
+            onClick={onNext}
+            style={{ color: 'var(--muted)', opacity: currentSong ? 1 : 0.4 }}
+            className="hover:text-[var(--text)] transition-colors"
+          >
+            <SkipForward size={18} />
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop layout — 3-column grid, unchanged */}
+      <div className="hidden md:grid px-6" style={{ gridTemplateColumns: '1fr auto 1fr', height: '64px' }}>
 
         {/* LEFT — art + info + heart */}
         <div className="flex items-center gap-3 min-w-0">

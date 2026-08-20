@@ -41,7 +41,7 @@ export default function MainContent({
           <PlaylistsPage playlists={playlists} allSongs={allSongs} onOpen={onOpen} onDelete={onDelete} />
         ) : (
           <>
-            <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
+            <p className="hidden sm:block text-xs mb-4" style={{ color: 'var(--muted)' }}>
               {isSearching
                 ? `${filteredSongs.length} result${filteredSongs.length !== 1 ? 's' : ''} for "${query}"`
                 : `${filteredSongs.length} song${filteredSongs.length !== 1 ? 's' : ''} · Yukta`}

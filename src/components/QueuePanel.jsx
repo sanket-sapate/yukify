@@ -7,7 +7,7 @@ import {
   SortableContext, verticalListSortingStrategy, useSortable,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { LayoutList, Trash2, MoreHorizontal, X, GripVertical } from 'lucide-react'
+import { LayoutList, Trash2, MoreHorizontal, X, GripVertical, ChevronDown } from 'lucide-react'
 
 // ── bare card used inside DragOverlay (no dnd hooks) ────────────────────────
 function QueueCard({ song, isCurrent }) {
@@ -130,7 +130,7 @@ function SortableItem({ song, idx, isCurrent, onPlay, onRemove }) {
 }
 
 // ── main panel ───────────────────────────────────────────────────────────────
-export default function QueuePanel({ songs, currentIndex, onPlay, onRemove, onMove, onClear }) {
+export default function QueuePanel({ songs, currentIndex, onPlay, onRemove, onMove, onClear, isOpen, onClose }) {
   const [activeId, setActiveId] = useState(null)
 
   const sensors = useSensors(
@@ -149,11 +149,8 @@ export default function QueuePanel({ songs, currentIndex, onPlay, onRemove, onMo
 
   const activeSong = activeId != null ? songs.find(s => s.id === activeId) : null
 
-  return (
-    <aside
-      style={{ width: '280px', background: 'var(--bg)', borderLeft: '2px solid var(--card-border)' }}
-      className="flex flex-col shrink-0 overflow-hidden"
-    >
+  const panelContent = (
+    <>
       {/* Header */}
       <div
         style={{ borderBottom: '2px solid var(--card-border)', background: 'var(--bg)' }}
@@ -177,6 +174,17 @@ export default function QueuePanel({ songs, currentIndex, onPlay, onRemove, onMo
         <button style={{ background: 'var(--surface)', color: 'var(--muted)' }} className="neo-btn w-8 h-8">
           <MoreHorizontal size={14} />
         </button>
+        {/* Close button — mobile only */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            style={{ background: 'var(--surface)', color: 'var(--muted)' }}
+            className="neo-btn w-8 h-8 md:hidden"
+            title="Close"
+          >
+            <ChevronDown size={14} />
+          </button>
+        )}
       </div>
 
       {/* List */}
@@ -218,6 +226,43 @@ export default function QueuePanel({ songs, currentIndex, onPlay, onRemove, onMo
           </DndContext>
         )}
       </div>
-    </aside>
+    </>
+  )
+
+  return (
+    <>
+      {/* Desktop: fixed-width side panel */}
+      <aside
+        style={{ width: '280px', background: 'var(--bg)', borderLeft: '2px solid var(--card-border)' }}
+        className="hidden md:flex flex-col shrink-0 overflow-hidden"
+      >
+        {panelContent}
+      </aside>
+
+      {/* Mobile: slide-up bottom sheet */}
+      <div className="md:hidden">
+        {/* Backdrop */}
+        {isOpen && (
+          <div
+            className="fixed inset-0 z-40"
+            style={{ background: 'rgba(0,0,0,0.4)' }}
+            onClick={onClose}
+          />
+        )}
+
+        {/* Drawer */}
+        <div
+          className="fixed inset-x-0 bottom-0 z-50 flex flex-col transition-transform duration-300"
+          style={{
+            background: 'var(--bg)',
+            borderTop: '2px solid var(--card-border)',
+            maxHeight: '70vh',
+            transform: isOpen ? 'translateY(0)' : 'translateY(100%)',
+          }}
+        >
+          {panelContent}
+        </div>
+      </div>
+    </>
   )
 }
