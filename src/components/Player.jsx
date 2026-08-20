@@ -177,24 +177,38 @@ export default function Player({
             {volume === 0 ? <VolumeX size={15} /> : <Volume2 size={15} />}
           </button>
           {/* Custom neo-brutalist volume slider */}
-          <div
-            className="relative w-24 shrink-0"
-            style={{
-              height: 10,
-              border: '2px solid var(--card-border)',
-              borderRadius: 2,
-              overflow: 'hidden',
-              boxShadow: '2px 2px 0 var(--card-border)',
-            }}
-          >
-            <div className="absolute inset-0" style={{
-              background: 'repeating-linear-gradient(-45deg, #ffb3c1 0px, #ffb3c1 4px, #ff8fa3 4px, #ff8fa3 8px)',
-            }}>
-              <div className="absolute inset-y-0 left-0" style={{
-                width: `${volume * 100}%`,
-                background: 'repeating-linear-gradient(-45deg, #ff4d6d 0px, #ff4d6d 4px, #e0304f 4px, #e0304f 8px)',
-              }} />
+          <div className="relative w-24 shrink-0" style={{ height: 10 }}>
+            <div
+              className="absolute inset-0"
+              style={{
+                border: '2px solid var(--card-border)',
+                borderRadius: 999,
+                overflow: 'hidden',
+                boxShadow: '2px 2px 0 var(--card-border)',
+              }}
+            >
+              <div className="absolute inset-0" style={{
+                background: 'repeating-linear-gradient(-45deg, #ffb3c1 0px, #ffb3c1 4px, #ff8fa3 4px, #ff8fa3 8px)',
+              }}>
+                <div className="absolute inset-y-0 left-0" style={{
+                  width: `${volume * 100}%`,
+                  background: 'repeating-linear-gradient(-45deg, #ff4d6d 0px, #ff4d6d 4px, #e0304f 4px, #e0304f 8px)',
+                }} />
+              </div>
             </div>
+
+            {/* Thumb dot */}
+            <div
+              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 pointer-events-none"
+              style={{
+                left: `${volume * 100}%`,
+                width: 16, height: 16,
+                background: '#fff',
+                border: '2px solid var(--card-border)',
+                borderRadius: '50%',
+              }}
+            />
+
             <input
               type="range" min={0} max={1} step={0.01}
               value={volume}
