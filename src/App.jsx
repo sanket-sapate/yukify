@@ -38,6 +38,7 @@ export default function App() {
 
   // Play a song from the current view — loads full view into queue
   const handlePlayFromView = (songId) => {
+    if (songId === player.currentSong?.id) { player.togglePlay(); return }
     const song = allSongs.find(s => s.id === songId)
     if (song) player.setQueueAndPlay([song], 0)
   }
