@@ -27,7 +27,7 @@ export default function App() {
 
   const activePlaylist = playlists.find(p => p.id === activePlaylistId)
   const playlistSongs = activePlaylist ? allSongs.filter(s => activePlaylist.songIds.includes(s.id)) : []
-  const viewSongs = view === 'playlist' ? playlistSongs : allSongs
+  const viewSongs = query ? allSongs : view === 'playlist' ? playlistSongs : allSongs
 
   const handleOpenPlaylist = id => { setActivePlaylistId(id); setView('playlist') }
 

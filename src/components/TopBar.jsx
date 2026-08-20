@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, Search, Settings } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Search, Settings, X } from 'lucide-react'
 
 export default function TopBar({ query, setQuery }) {
   return (
@@ -40,12 +40,22 @@ export default function TopBar({ query, setQuery }) {
         <Search size={14} style={{ color: 'var(--muted)' }} className="shrink-0" />
         <input
           type="text"
-          placeholder="Search"
+          placeholder="Search songs, artists…"
           value={query}
           onChange={e => setQuery(e.target.value)}
           className="flex-1 text-sm outline-none bg-transparent"
           style={{ color: 'var(--text)' }}
         />
+        {query && (
+          <button
+            onClick={() => setQuery('')}
+            className="shrink-0 p-0.5 rounded transition-opacity hover:opacity-70"
+            style={{ color: 'var(--muted)' }}
+            title="Clear search"
+          >
+            <X size={13} />
+          </button>
+        )}
       </div>
 
       {/* Right — settings */}

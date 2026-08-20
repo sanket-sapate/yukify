@@ -11,15 +11,16 @@ export default function MainContent({
   onOpen, onDelete,
 }) {
   const isPlaylistView = view === 'playlist'
+  const isSearching = query.trim().length > 0
 
-  const filteredSongs = query
+  const filteredSongs = isSearching
     ? songs.filter(s =>
         s.title.toLowerCase().includes(query.toLowerCase()) ||
         s.artist.toLowerCase().includes(query.toLowerCase())
       )
     : songs
 
-  const pageTitle = isPlaylistView ? activePlaylist?.name : 'Dashboard'
+  const pageTitle = isSearching ? 'Search' : isPlaylistView ? activePlaylist?.name : 'Dashboard'
 
   return (
     <div
@@ -36,19 +37,21 @@ export default function MainContent({
 
       {/* Scrollable content */}
       <div className="flex-1 overflow-y-auto px-5 pt-5 pb-4">
-        {view === 'playlists' ? (
+        {view === 'playlists' && !isSearching ? (
           <PlaylistsPage playlists={playlists} allSongs={allSongs} onOpen={onOpen} onDelete={onDelete} />
         ) : (
           <>
             <p className="text-xs mb-4" style={{ color: 'var(--muted)' }}>
-              {filteredSongs.length} song{filteredSongs.length !== 1 ? 's' : ''} · Yukta
+              {isSearching
+                ? `${filteredSongs.length} result${filteredSongs.length !== 1 ? 's' : ''} for "${query}"`
+                : `${filteredSongs.length} song${filteredSongs.length !== 1 ? 's' : ''} · Yukta`}
             </p>
 
             {filteredSongs.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-48 gap-2" style={{ color: 'var(--muted)' }}>
                 <span className="text-4xl opacity-30">♪</span>
                 <p className="text-sm">
-                  {query ? `No songs match "${query}"` : isPlaylistView ? 'No songs yet — use ⋮ on a card to add.' : 'No songs.'}
+                  {isSearching ? `No songs match "${query}"` : isPlaylistView ? 'No songs yet — right-click a card to add.' : 'No songs.'}
                 </p>
               </div>
             ) : (
@@ -64,7 +67,7 @@ export default function MainContent({
                         onAddToQueue={onAddToQueue}
                         onAddToPlaylist={onAddToPlaylist}
                       />
-                      {isPlaylistView && (
+                      {isPlaylistView && !activePlaylist?.isDefault && (
                         <button
                           onClick={() => onRemoveFromPlaylist(activePlaylist.id, song.id)}
                           className="absolute top-2 left-2 z-10 p-1.5 rounded-lg opacity-0 group-hover/wrap:opacity-100 transition-all"

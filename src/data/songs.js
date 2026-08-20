@@ -32,6 +32,9 @@ const rawSongs = [
   { file: 'Tu Hai Wahi - I.mp3' },
   { file: 'Tu Hi Meri Shab Hai - I.mp3' },
   { file: 'Yeh Dil Tum Bin Kahin Lagta Nahi.aac' },
+  { file: 'Kehna Hi Kya.aac' },
+  { file: 'Kitida Navyane.aac' },
+  { file: 'Raat Ka Nasha.aac' },
 ]
 
 // Gradient palettes for song cards (no album art)
