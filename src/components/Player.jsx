@@ -12,6 +12,7 @@ export default function Player({
   currentSong, isPlaying,
   progress, currentTime, duration,
   volume, shuffle, repeat,
+  isLiked, onToggleLike,
   onTogglePlay, onNext, onPrev,
   onSeek, onVolume,
   onToggleShuffle, onToggleRepeat,
@@ -103,12 +104,16 @@ export default function Player({
             />
           )}
           <button
-            style={{ color: 'var(--card-border)', opacity: currentSong ? 1 : 0.3 }}
-            className="ml-1 shrink-0 hover:text-[var(--accent)] transition-colors"
-            title="Like"
+            onClick={onToggleLike}
+            style={{
+              color: isLiked ? 'var(--accent)' : 'var(--muted)',
+              opacity: currentSong ? 1 : 0.3,
+            }}
+            className="ml-1 shrink-0 transition-colors hover:opacity-80"
+            title={isLiked ? 'Unlike' : 'Like'}
             disabled={!currentSong}
           >
-            <Heart size={15} />
+            <Heart size={15} fill={isLiked ? 'var(--accent)' : 'none'} />
           </button>
         </div>
 

@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { songs as allSongs } from './data/songs'
 import { usePlayer } from './hooks/usePlayer'
 import { usePlaylists } from './hooks/usePlaylists'
+import { useLikes } from './hooks/useLikes'
 import { useKeyboard } from './hooks/useKeyboard'
 
 import TopBar from './components/TopBar'
@@ -16,6 +17,7 @@ import Toast from './components/Toast'
 export default function App() {
   const player = usePlayer()
   const { playlists, createPlaylist, deletePlaylist, addSongToPlaylist, removeSongFromPlaylist } = usePlaylists()
+  const { likedIds, toggleLike } = useLikes()
 
   const [view, setView] = useState('library')
   const [activePlaylistId, setActivePlaylistId] = useState(null)
@@ -27,7 +29,8 @@ export default function App() {
 
   const activePlaylist = playlists.find(p => p.id === activePlaylistId)
   const playlistSongs = activePlaylist ? allSongs.filter(s => activePlaylist.songIds.includes(s.id)) : []
-  const viewSongs = query ? allSongs : view === 'playlist' ? playlistSongs : allSongs
+  const likedSongs = allSongs.filter(s => likedIds.has(s.id))
+  const viewSongs = query ? allSongs : view === 'playlist' ? playlistSongs : view === 'liked' ? likedSongs : allSongs
 
   const handleOpenPlaylist = id => { setActivePlaylistId(id); setView('playlist') }
 
@@ -109,6 +112,8 @@ export default function App() {
         volume={player.volume}
         shuffle={player.shuffle}
         repeat={player.repeat}
+        isLiked={player.currentSong ? likedIds.has(player.currentSong.id) : false}
+        onToggleLike={() => player.currentSong && toggleLike(player.currentSong.id)}
         onTogglePlay={player.togglePlay}
         onNext={player.playNext}
         onPrev={player.playPrev}

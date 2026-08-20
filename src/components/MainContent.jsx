@@ -20,7 +20,7 @@ export default function MainContent({
       )
     : songs
 
-  const pageTitle = isSearching ? 'Search' : isPlaylistView ? activePlaylist?.name : 'Dashboard'
+  const pageTitle = isSearching ? 'Search' : view === 'liked' ? 'Liked Songs' : isPlaylistView ? activePlaylist?.name : 'Dashboard'
 
   return (
     <div
@@ -51,7 +51,7 @@ export default function MainContent({
               <div className="flex flex-col items-center justify-center h-48 gap-2" style={{ color: 'var(--muted)' }}>
                 <span className="text-4xl opacity-30">♪</span>
                 <p className="text-sm">
-                  {isSearching ? `No songs match "${query}"` : isPlaylistView ? 'No songs yet — right-click a card to add.' : 'No songs.'}
+                  {isSearching ? `No songs match "${query}"` : view === 'liked' ? 'No liked songs yet — hit ♥ on the player.' : isPlaylistView ? 'No songs yet — right-click a card to add.' : 'No songs.'}
                 </p>
               </div>
             ) : (

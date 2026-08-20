@@ -1,4 +1,4 @@
-import { Music, LayoutGrid, ListMusic, Plus } from 'lucide-react'
+import { Music, LayoutGrid, ListMusic, Heart, Plus } from 'lucide-react'
 
 export default function IconSidebar({ view, setView, onCreatePlaylist }) {
   const btn = (icon, id, title) => (
@@ -31,6 +31,7 @@ export default function IconSidebar({ view, setView, onCreatePlaylist }) {
       </div>
 
       {btn(<LayoutGrid size={17} />, 'library', 'Library')}
+      {btn(<Heart size={17} />, 'liked', 'Liked Songs')}
       {btn(<ListMusic size={17} />, 'playlists', 'Playlists')}
 
       <div className="flex-1" />
