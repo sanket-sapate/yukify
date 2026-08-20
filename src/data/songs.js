@@ -3,7 +3,17 @@
 
 // Song-specific cover art (place images in /public/covers/)
 const covers = {
-  'Aapki Ankhon Me Kuch.mp3': '/covers/aapki-ankhon-me.jpg',
+  'Barso Re - I.mp3':              '/covers/Barso Re.jpg',
+  'Bol Na Halke - I.mp3':          '/covers/Bol Na Halke.jpg',
+  'Chand Sifarish - I.mp3':        '/covers/Chand Sifarish.jpg',
+  'Isq Risk - I.mp3':              '/covers/Isq Risk.jpg',
+  'Kanha Soja Jara.aac':           '/covers/Kanha Soja Jara.jpg',
+  'Kehna Hi Kya.aac':              '/covers/Kehna Hi Kya.jpg',
+  'Kitida Navyane.aac':            '/covers/Kitida Navyane.jpg',
+  'Lae Dooba - I.mp3':             '/covers/Lae Dooba.jpg',
+  'Piya Tose Naina Lage Re.aac':   '/covers/Piya Tose Naina Lage Re.jpg',
+  'Raat Ka Nasha.aac':             '/covers/Raat Ka Nasha.jpg',
+  'Surili Akhiyon Wale.mp3':       '/covers/Surili Ankhiyon Wale.jpg',
 }
 
 const rawSongs = [
