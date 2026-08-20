@@ -1,21 +1,31 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 /**
  * Global keyboard controller for Yukify.
  *
- * Space        → Play / Pause
- * ArrowLeft    → Previous track  (Shift+ArrowLeft → seek -10s)
- * ArrowRight   → Next track      (Shift+ArrowRight → seek +10s)
- * ArrowUp      → Volume +10%
- * ArrowDown    → Volume -10%
- * M            → Mute / unmute
- * S            → Toggle shuffle
- * R            → Cycle repeat (none → all → one)
+ * Space             → Play / Pause
+ * ArrowLeft         → Previous track
+ * Shift+ArrowLeft   → Seek -10s
+ * ArrowRight        → Next track
+ * Shift+ArrowRight  → Seek +10s
+ * ArrowUp           → Volume +10%
+ * ArrowDown         → Volume -10%
+ * M                 → Mute / unmute
+ * S                 → Toggle shuffle
+ * R                 → Cycle repeat (none → all → one)
  */
-export function useKeyboard({ isPlaying, volume, currentTime, duration, togglePlay, playNext, playPrev, seek, setVolume, toggleShuffle, toggleRepeat }) {
+export function useKeyboard({ volume, currentTime, duration, togglePlay, playNext, playPrev, seek, setVolume, toggleShuffle, toggleRepeat }) {
+  // Use refs so the event listener never needs to re-register
+  const volumeRef      = useRef(volume)
+  const currentTimeRef = useRef(currentTime)
+  const durationRef    = useRef(duration)
+
+  useEffect(() => { volumeRef.current      = volume      }, [volume])
+  useEffect(() => { currentTimeRef.current = currentTime }, [currentTime])
+  useEffect(() => { durationRef.current    = duration    }, [duration])
+
   useEffect(() => {
     const handler = e => {
-      // Don't hijack shortcuts when user is typing in an input
       const tag = document.activeElement?.tagName
       if (tag === 'INPUT' || tag === 'TEXTAREA') return
 
@@ -28,8 +38,7 @@ export function useKeyboard({ isPlaying, volume, currentTime, duration, togglePl
         case 'ArrowLeft':
           e.preventDefault()
           if (e.shiftKey) {
-            // Seek back 10s
-            const pct = Math.max(0, ((currentTime - 10) / duration) * 100)
+            const pct = Math.max(0, ((currentTimeRef.current - 10) / durationRef.current) * 100)
             seek(pct)
           } else {
             playPrev()
@@ -39,8 +48,7 @@ export function useKeyboard({ isPlaying, volume, currentTime, duration, togglePl
         case 'ArrowRight':
           e.preventDefault()
           if (e.shiftKey) {
-            // Seek forward 10s
-            const pct = Math.min(100, ((currentTime + 10) / duration) * 100)
+            const pct = Math.min(100, ((currentTimeRef.current + 10) / durationRef.current) * 100)
             seek(pct)
           } else {
             playNext()
@@ -49,17 +57,17 @@ export function useKeyboard({ isPlaying, volume, currentTime, duration, togglePl
 
         case 'ArrowUp':
           e.preventDefault()
-          setVolume(Math.min(1, parseFloat((volume + 0.1).toFixed(1))))
+          setVolume(Math.min(1, parseFloat((volumeRef.current + 0.1).toFixed(1))))
           break
 
         case 'ArrowDown':
           e.preventDefault()
-          setVolume(Math.max(0, parseFloat((volume - 0.1).toFixed(1))))
+          setVolume(Math.max(0, parseFloat((volumeRef.current - 0.1).toFixed(1))))
           break
 
         case 'm':
         case 'M':
-          setVolume(volume === 0 ? 0.8 : 0)
+          setVolume(volumeRef.current === 0 ? 0.8 : 0)
           break
 
         case 's':
@@ -79,5 +87,5 @@ export function useKeyboard({ isPlaying, volume, currentTime, duration, togglePl
 
     window.addEventListener('keydown', handler)
     return () => window.removeEventListener('keydown', handler)
-  }, [isPlaying, volume, currentTime, duration, togglePlay, playNext, playPrev, seek, setVolume, toggleShuffle, toggleRepeat])
+  }, [togglePlay, playNext, playPrev, seek, setVolume, toggleShuffle, toggleRepeat])
 }

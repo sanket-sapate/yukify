@@ -36,18 +36,17 @@ export default function App() {
 
   // Play a song from the current view — loads full view into queue
   const handlePlayFromView = (songId) => {
-    const idx = viewSongs.findIndex(s => s.id === songId)
-    if (idx !== -1) player.setQueueAndPlay(viewSongs, idx)
+    const song = allSongs.find(s => s.id === songId)
+    if (song) player.setQueueAndPlay([song], 0)
   }
 
   const handleAddToQueue = (song) => {
     const result = player.addToQueue(song)
     if (result === 'playing') showToast('Already playing')
-    if (result === 'moved')   showToast('Moved to top of queue')
+    if (result === 'moved')   showToast('Playing next')
   }
 
   useKeyboard({
-    isPlaying:     player.isPlaying,
     volume:        player.volume,
     currentTime:   player.currentTime,
     duration:      player.duration,
@@ -106,6 +105,7 @@ export default function App() {
       <Player
         currentSong={player.currentSong}
         isPlaying={player.isPlaying}
+        isBuffering={player.isBuffering}
         progress={player.progress}
         currentTime={player.currentTime}
         duration={player.duration}

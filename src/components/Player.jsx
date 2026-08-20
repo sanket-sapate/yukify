@@ -1,6 +1,6 @@
 import {
   Play, Pause, SkipBack, SkipForward,
-  Shuffle, Repeat, Repeat1, Volume2, VolumeX, Heart,
+  Shuffle, Repeat, Repeat1, Volume2, VolumeX, Heart, Loader2,
 } from 'lucide-react'
 
 function fmt(s) {
@@ -9,7 +9,7 @@ function fmt(s) {
 }
 
 export default function Player({
-  currentSong, isPlaying,
+  currentSong, isPlaying, isBuffering,
   progress, currentTime, duration,
   volume, shuffle, repeat,
   isLiked, onToggleLike,
@@ -25,7 +25,7 @@ export default function Player({
       className="shrink-0"
     >
       {/* Full-width striped seek bar — Nuclear's iconic look */}
-      <div className="relative flex items-center" style={{ borderBottom: '2px solid var(--card-border)', height: '20px' }}>
+      <div className={`relative flex items-center${isBuffering ? ' animate-pulse' : ''}`} style={{ borderBottom: '2px solid var(--card-border)', height: '20px' }}>
         {/* Timestamps */}
         <span
           className="absolute left-2 text-[10px] tabular-nums z-10 font-medium"
@@ -140,9 +140,13 @@ export default function Player({
             onClick={onTogglePlay}
             style={{ background: 'var(--accent)', color: 'white', opacity: currentSong ? 1 : 0.5 }}
             className="neo-btn w-9 h-9"
-            disabled={!currentSong}
+            disabled={!currentSong || isBuffering}
           >
-            {isPlaying ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
+            {isBuffering
+              ? <Loader2 size={16} className="animate-spin" />
+              : isPlaying
+                ? <Pause size={16} />
+                : <Play size={16} className="ml-0.5" />}
           </button>
 
           <button
@@ -172,12 +176,33 @@ export default function Player({
           >
             {volume === 0 ? <VolumeX size={15} /> : <Volume2 size={15} />}
           </button>
-          <input
-            type="range" min={0} max={1} step={0.01}
-            value={volume}
-            onChange={e => onVolume(parseFloat(e.target.value))}
-            className="w-24 shrink-0"
-          />
+          {/* Custom neo-brutalist volume slider */}
+          <div
+            className="relative w-24 shrink-0"
+            style={{
+              height: 10,
+              border: '2px solid var(--card-border)',
+              borderRadius: 2,
+              overflow: 'hidden',
+              boxShadow: '2px 2px 0 var(--card-border)',
+            }}
+          >
+            <div className="absolute inset-0" style={{
+              background: 'repeating-linear-gradient(-45deg, #ffb3c1 0px, #ffb3c1 4px, #ff8fa3 4px, #ff8fa3 8px)',
+            }}>
+              <div className="absolute inset-y-0 left-0" style={{
+                width: `${volume * 100}%`,
+                background: 'repeating-linear-gradient(-45deg, #ff4d6d 0px, #ff4d6d 4px, #e0304f 4px, #e0304f 8px)',
+              }} />
+            </div>
+            <input
+              type="range" min={0} max={1} step={0.01}
+              value={volume}
+              onChange={e => onVolume(parseFloat(e.target.value))}
+              className="absolute inset-0 w-full opacity-0 cursor-pointer"
+              style={{ height: '100%' }}
+            />
+          </div>
         </div>
       </div>
     </footer>
